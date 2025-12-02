@@ -1,0 +1,49 @@
+services:
+  # --- Nó Primário (Master) ---
+  pg-master:
+    image: bitnami/postgresql:latest
+    container_name: pg-master
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=repl_user
+      - POSTGRESQL_REPLICATION_PASSWORD=repl_password
+      - POSTGRESQL_USERNAME=user_master
+      - POSTGRESQL_PASSWORD=password_master
+      - POSTGRESQL_DATABASE=sgbdd-db
+    volumes:
+      - pg_master_data:/bitnami/postgresql
+
+  # --- Nó Secundário (Slave/Replica) ---
+  pg-slave:
+    image: bitnami/postgresql:latest
+    container_name: pg-slave
+    depends_on:
+      - pg-master
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_REPLICATION_USER=repl_user
+      - POSTGRESQL_REPLICATION_PASSWORD=repl_password
+      - POSTGRESQL_MASTER_HOST=pg-master
+      - POSTGRESQL_MASTER_PORT_NUMBER=5432
+    volumes:
+      - pg_slave_data:/bitnami/postgresql
+
+  # --- Load Balancer (HAProxy) ---
+  haproxy:
+    image: haproxy:latest
+    container_name: haproxy
+    depends_on:
+      - pg-master
+      - pg-slave
+    ports:
+      - "5000:5000" # Entrada de ESCRITA
+      - "5001:5001" # Entrada de LEITURA
+      - "8404:8404" # Painel de estatísticas do HAProxy
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+
+volumes:
+  pg_master_data:
+  pg_slave_data:
