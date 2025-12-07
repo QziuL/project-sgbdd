@@ -22,7 +22,9 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource masterDataSource() {
-        return this.masterProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
+        HikariDataSource ds = this.masterProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
+        ds.setMaxLifetime(55000);
+        return ds;
     }
 
     @Bean
@@ -33,7 +35,9 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource slaveDataSource() {
-        return this.slaveProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
+        HikariDataSource ds = this.slaveProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
+        ds.setMaxLifetime(55000);
+        return ds;
     }
 
     @Bean

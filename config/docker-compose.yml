@@ -27,6 +27,7 @@ services:
       - POSTGRESQL_REPLICATION_PASSWORD=repl_password
       - POSTGRESQL_MASTER_HOST=pg-master
       - POSTGRESQL_MASTER_PORT_NUMBER=5432
+      - POSTGRESQL_PASSWORD=password_slave
     volumes:
       - pg_slave_data:/bitnami/postgresql
 
