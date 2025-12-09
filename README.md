@@ -16,7 +16,7 @@ O sistema é composto pelos seguintes componentes:
 
 ## 🚀 Tecnologias Utilizadas
 
-*   **Java 17** + **Spring Boot 3**
+*   **Java 21** + **Spring Boot 3**
 *   **Spring Data JPA** (Hibernate)
 *   **PostgreSQL** (Imagem Bitnami com suporte a replicação)
 *   **HAProxy**
